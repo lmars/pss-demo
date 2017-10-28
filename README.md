@@ -16,13 +16,21 @@ go build -o bin/pss-demo .
 Run the demo:
 
 ```
-bin/pss-demo --port 8080 --node-count 10 --log-dir log
+bin/pss-demo \
+  --pss-port   8080 \
+  --swarm-port 8500 \
+  --swarm-dir  swarm \
+  --node-count 10 \
+  --log-dir    log
 ```
 
 This boots a PSS simulation network consisting of `--node-count` nodes with
 each node's logs being written to individual files in the `--log-dir`
-directory, then starts the connection manager on `--port` (listening on 0.0.0.0
-so will be accessible on all of the host's IP addresses).
+directory, then starts the connection manager on `--pss-port` (listening on
+`0.0.0.0` so will be accessible on all of the host's IP addresses).
+
+It also runs a single Swarm node storing chunks in `--swarm-dir` and exposing
+the Swarm HTTP gateway on `--swarm-port`.
 
 Connect to the connection manager via a WebSocket:
 
