@@ -83,7 +83,7 @@ var services = func() adapters.Services {
 			if err != nil {
 				return nil, fmt.Errorf("create pss cache tmpdir failed", "error", err)
 			}
-			dpa, err := storage.NewLocalDPA(cachedir)
+			dpa, err := storage.NewLocalDPA(cachedir, "")
 			if err != nil {
 				return nil, fmt.Errorf("local dpa creation failed", "error", err)
 			}

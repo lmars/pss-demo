@@ -379,10 +379,10 @@
 			"revisionTime": "2017-10-28T22:59:38Z"
 		},
 		{
-			"checksumSHA1": "40hPFm7jBsoCw8y+6RVJDpyMVaA=",
+			"checksumSHA1": "RfMghFVIe2txxUGZnxeViJK7FxI=",
 			"path": "github.com/ethereum/go-ethereum/swarm/storage",
-			"revision": "dd1c1991da9d9abf6424ae4aea731fe9f42aafe5",
-			"revisionTime": "2017-10-28T22:59:38Z"
+			"revision": "9861dfa53144204ba1d64562342cc4d2a4387e2e",
+			"revisionTime": "2017-10-25T16:35:58Z"
 		},
 		{
 			"checksumSHA1": "WBhJebKaQbpkdIpQdBXR09izcT4=",
