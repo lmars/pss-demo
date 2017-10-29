@@ -361,10 +361,10 @@
 			"revisionTime": "2017-10-28T22:59:38Z"
 		},
 		{
-			"checksumSHA1": "w1rg6cqw+zWS2zqUP8f3wTdQvhc=",
+			"checksumSHA1": "D5Qj9stDcTmbn0FBISljV5Bek24=",
 			"path": "github.com/ethereum/go-ethereum/swarm/pss",
-			"revision": "dd1c1991da9d9abf6424ae4aea731fe9f42aafe5",
-			"revisionTime": "2017-10-28T22:59:38Z"
+			"revision": "c0255d927d6a7a8b3fd935b5536faadeecf8070e",
+			"revisionTime": "2017-10-27T09:28:34Z"
 		},
 		{
 			"checksumSHA1": "+3ymRJJsEKg/LMah/+/DuUEFTjk=",
