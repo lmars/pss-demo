@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net"
 	"net/http"
 	"sync"
@@ -10,6 +11,11 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/simulations"
 	"golang.org/x/net/websocket"
 )
+
+type connList struct {
+	Key      string
+	Assigned bool
+}
 
 type connManager struct {
 	net      *simulations.Network
@@ -27,6 +33,32 @@ func newConnManager(net *simulations.Network) *connManager {
 }
 
 func (c *connManager) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	if req.URL.Path == "/list" {
+		list := []connList{}
+		for _, n := range c.net.GetNodes() {
+			rpcclient, _ := n.Client()
+			var pubkey string
+			rpcclient.Call(&pubkey, "pss_getPublicKey")
+			listitem := connList{
+				Key: pubkey,
+			}
+			if _, ok := c.assigned[n.ID()]; ok {
+				listitem.Assigned = true
+			}
+			list = append(list, listitem)
+		}
+		jsonlist, err := json.Marshal(list)
+		if err != nil {
+			log.Warn("json marshal failed", "err", err)
+		} else if len(jsonlist) == 0 {
+			jsonlist = []byte("[]")
+		}
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET")
+		w.Write(jsonlist)
+		return
+
+	}
 	node, ok := c.getNode(req)
 	if !ok {
 		log.Warn("no available node for request", "remote_addr", req.RemoteAddr)
@@ -48,9 +80,9 @@ func (c *connManager) getNode(req *http.Request) (*simulations.Node, bool) {
 		log.Error("error parsing RemoteAddr", "remote_addr", req.RemoteAddr, "err", err)
 		return nil, false
 	}
-	if node, ok := c.clients[clientIP]; ok {
-		return node, true
-	}
+	//	if node, ok := c.clients[clientIP]; ok {
+	//		return node, true
+	//	}
 	nodes := c.net.GetNodes()
 	for _, node := range nodes {
 		if _, ok := c.assigned[node.ID()]; !ok {
