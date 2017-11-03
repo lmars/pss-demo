@@ -55,6 +55,10 @@ type ExecAdapter struct {
 	// simulation node are created.
 	BaseDir string
 
+	// ListenAddr is the TCP listen address for the node devp2p and RPC
+	// servers (defaults to 127.0.0.1).
+	ListenAddr string
+
 	nodes map[discover.NodeID]*ExecNode
 }
 
@@ -62,8 +66,9 @@ type ExecAdapter struct {
 // subdirectories of the given base directory
 func NewExecAdapter(baseDir string) *ExecAdapter {
 	return &ExecAdapter{
-		BaseDir: baseDir,
-		nodes:   make(map[discover.NodeID]*ExecNode),
+		BaseDir:    baseDir,
+		ListenAddr: "127.0.0.1",
+		nodes:      make(map[discover.NodeID]*ExecNode),
 	}
 }
 
@@ -96,7 +101,7 @@ func (e *ExecAdapter) NewNode(config *NodeConfig) (Node, error) {
 		Node:  config,
 	}
 	conf.Stack.DataDir = filepath.Join(dir, "data")
-	conf.Stack.WSHost = "127.0.0.1"
+	conf.Stack.WSHost = e.ListenAddr
 	conf.Stack.WSPort = 0
 	conf.Stack.WSOrigins = []string{"*"}
 	conf.Stack.WSExposeAll = true
@@ -107,7 +112,7 @@ func (e *ExecAdapter) NewNode(config *NodeConfig) (Node, error) {
 
 	// listen on a random localhost port (we'll get the actual port after
 	// starting the node through the RPC admin.nodeInfo method)
-	conf.Stack.P2P.ListenAddr = "127.0.0.1:0"
+	conf.Stack.P2P.ListenAddr = e.ListenAddr + ":0"
 
 	node := &ExecNode{
 		ID:      config.ID,

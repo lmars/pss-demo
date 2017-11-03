@@ -26,6 +26,7 @@ options:
   -p, --pss-port=PORT      Conn manager WebSocket port [default: 8080]
   -s, --swarm-port=PORT    Swarm HTTP gateway port [default: 8500]
   -n, --net-port=PORT      Simulation API port [default: 8888]
+  -a, --net-addr=ADDR      Simulation node listen address [default: 127.0.0.1]
   -d, --swarm-dir=DIR      Swarm data directory [default: swarm]
   -n, --node-count=COUNT   Initial number of pss nodes to start [default: 10]
   -l, --log-dir=DIR        Directory to store node logs [default: log]
@@ -57,6 +58,7 @@ func run() error {
 		return err
 	}
 	adapter := adapters.NewExecAdapter(tmpDir)
+	adapter.ListenAddr = args.String("--net-addr")
 	net, err := NewPssSimulation(adapter, args.Int("--node-count"), logDir)
 	if err != nil {
 		return err
