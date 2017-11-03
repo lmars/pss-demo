@@ -19,6 +19,7 @@ Run the demo:
 bin/pss-demo \
   --pss-port   8080 \
   --swarm-port 8500 \
+  --net-port   8888 \
   --swarm-dir  swarm \
   --node-count 10 \
   --log-dir    log
@@ -30,7 +31,8 @@ directory, then starts the connection manager on `--pss-port` (listening on
 `0.0.0.0` so will be accessible on all of the host's IP addresses).
 
 It also runs a single Swarm node storing chunks in `--swarm-dir` and exposing
-the Swarm HTTP gateway on `--swarm-port`.
+the Swarm HTTP gateway on `--swarm-port`, and the simulation API server on
+`--net-port`.
 
 Connect to the connection manager via a WebSocket:
 

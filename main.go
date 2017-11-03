@@ -11,6 +11,7 @@ import (
 
 	"github.com/docopt/docopt-go"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/ethereum/go-ethereum/p2p/simulations"
 	"github.com/ethereum/go-ethereum/p2p/simulations/adapters"
 	"github.com/ethereum/go-ethereum/swarm/api"
 	swarmhttp "github.com/ethereum/go-ethereum/swarm/api/http"
@@ -24,6 +25,7 @@ usage: pss-demo [options]
 options:
   -p, --pss-port=PORT      Conn manager WebSocket port [default: 8080]
   -s, --swarm-port=PORT    Swarm HTTP gateway port [default: 8500]
+  -n, --net-port=PORT      Simulation API port [default: 8888]
   -d, --swarm-dir=DIR      Swarm data directory [default: swarm]
   -n, --node-count=COUNT   Initial number of pss nodes to start [default: 10]
   -l, --log-dir=DIR        Directory to store node logs [default: log]
@@ -83,6 +85,18 @@ func run() error {
 		}
 	}()
 	shutdown.BeforeExit(func() { swarmSrv.Close() })
+
+	netSrv := http.Server{
+		Addr:    "0.0.0.0:" + args.String("--net-port"),
+		Handler: simulations.NewServer(net),
+	}
+	log.Info("Starting Simulation API", "addr", netSrv.Addr)
+	go func() {
+		if err := netSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			shutdown.Fatalf("Simulation server exited unexpectedly: %s", err)
+		}
+	}()
+	shutdown.BeforeExit(func() { netSrv.Close() })
 
 	// start conn manager
 	connSrv := http.Server{
